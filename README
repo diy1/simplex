@@ -3,51 +3,51 @@ Aspirator: A simple checker for exception handler bugs
 ==============
 - Aspirator is a tool that checks for trivial bug patterns in exception
   handlers for Java or JVM compatible programs. Specifically, it reports
-  a warning if an important exception is ignored, system aborts on 
+  a warning if an important exception is ignored, system aborts on
   over-caught exceptions, or the exception handler contains "TODO" or
   "FIXME" in the comments. These trivial bugs in exception handlers have
   been shown to have caused a significant number of deadly failures for
   distributed systems. See more details in the paper:
 
-  Simple Testing Can Prevent Most Critical Failures: An Analysis of 
-  Production Failures in Distributed Data-intensive Systems, 
-  Ding Yuan, Yu Luo, Xin Zhuang, Guilherme Rodrigues, Xu Zhao, Yongle Zhang, 
-  Pranay U. Jain, and Michael Stumm. In the Proceedings of the 11th USENIX 
-  Symposium on Operating Systems Design and Implementation (OSDI'14), October 2014.   
+  Simple Testing Can Prevent Most Critical Failures: An Analysis of
+  Production Failures in Distributed Data-intensive Systems,
+  Ding Yuan, Yu Luo, Xin Zhuang, Guilherme Rodrigues, Xu Zhao, Yongle Zhang,
+  Pranay U. Jain, and Michael Stumm. In the Proceedings of the 11th USENIX
+  Symposium on Operating Systems Design and Implementation (OSDI'14), October 2014.
 
 - Aspirator is built on Chord. The later part of this documents describes
-  how to install and run chord. A copy of the Chord source is included 
+  how to install and run chord. A copy of the Chord source is included
   here.
 
 - After Chord is installed, the following three analysis can be used to
-  detect bugs in exception handling code: 
+  detect bugs in exception handling code:
     - exception-empty-handler-java: detecting empty exception handler
-    - terminating-handler-java: detecting unexpected abort in exception 
+    - terminating-handler-java: detecting unexpected abort in exception
       overcatch
     - exception-todo-in-handler-java: detecting "TODO" and "FIXME" in
       exception handler
 
-- You will need to read the user guide of Chord to understand how to 
+- You will need to read the user guide of Chord to understand how to
   run an analysis.
 
-- We also extended Chord to easier analyze big real-world project by adding 
-  a few more options. As an example, in the example/cassandra directory, 
-  there is a chord.properties file showing how to run the 
-  "exception-empty-hanler-java" analysis on Cassandra. Here is a brief 
+- We also extended Chord to easier analyze big real-world project by adding
+  a few more options. As an example, in the example/cassandra directory,
+  there is a chord.properties file showing how to run the
+  "exception-empty-hanler-java" analysis on Cassandra. Here is a brief
   overview of the required options:
 
     - chord.class.path: paths to .jar files containing the bytecode of the
       target software to analyze. Normally you can find them in the
       "build/" or "target/" directories in the target software's source
-      directory after you compiled it. 
+      directory after you compiled it.
 
     - chord.src.path: paths to the java source files. The source files are
-      used by the "exception-todo-in-handler-java" analysis to analyze the 
-      comments; they are also used to print the analysis result.  
+      used by the "exception-todo-in-handler-java" analysis to analyze the
+      comments; they are also used to print the analysis result.
 
-    - chord.run.analyses: the value should be one of the followings: 
+    - chord.run.analyses: the value should be one of the followings:
       "exception-empty-handler-java", "terminating-handler-java", or
-      "exception-todo-in-handler-java". 
+      "exception-todo-in-handler-java".
 
     - chord.extraclasses.file: contains a list of classes to be analyzed.
       aspirator will only analyze these classes. The reason for us to add
@@ -61,28 +61,28 @@ Aspirator: A simple checker for exception handler bugs
       analyze, thus we found a large amount of the target code is not
       analyzed by chord simply because they couldn't be reached; second,
       it will also analyze all the library bytecode, such as java.lang.
-      By using this file, it tells aspirator exactly which classes we are 
+      By using this file, it tells aspirator exactly which classes we are
       interested to analyze, and you do not have to provide a main class.
-  
-      We also provided an example class file, "classNames.txt", that 
-      contains all the classes in cassandra. You can easily generate this 
-      file by scripting over the .jar file, which contains all the names 
+
+      We also provided an example class file, "classNames.txt", that
+      contains all the classes in cassandra. You can easily generate this
+      file by scripting over the .jar file, which contains all the names
       of classes.
 
     - chord.ignore.exceptions: an optional list of exceptions, separated by comma,
-      that aspirator will not report a warning if their handlers are empty. 
-      This is to reduce the false positives of aspirator. By default, 
-      aspirator ignores "FileNotFoundException". 
+      that aspirator will not report a warning if their handlers are empty.
+      This is to reduce the false positives of aspirator. By default,
+      aspirator ignores "FileNotFoundException".
 
     - chord.ignore.methods: an optional list of exceptions, separated by comma,
       that aspirator will not report a warning if the exceptions thrown by them
-      are not handled. This is to reduce the false positives of aspirator. By 
+      are not handled. This is to reduce the false positives of aspirator. By
       default, aspirator ignores exceptions thrown by methods whose names
-      contain "close", "cleanup", "stop", and "shutdown". 
+      contain "close", "cleanup", "stop", and "shutdown".
 
-    - All other properties do not need to be modified. 
+    - All other properties do not need to be modified.
 
-- Note: when running aspirator, you should set "chord.verbose", the verbosity 
+- Note: when running aspirator, you should set "chord.verbose", the verbosity
   level, to 0, otherwise there will be huge amount of debugging information
   printed.
 
@@ -103,10 +103,10 @@ There are log messages..
 192:             logger.warn("CassandraAuthorizer failed to revoke all permissions of {}: {}", droppedUser, e);
 193:         }
 ==========================================
-  Aspirator will report whether the exception handler is logged or not. In 
-  addition, the exception-throwing line is highlighted by repeating itself 
-  (e.g., line 188 in this example). 
- 
+  Aspirator will report whether the exception handler is logged or not. In
+  addition, the exception-throwing line is highlighted by repeating itself
+  (e.g., line 188 in this example).
+
 ===============
 OBTAINING CHORD
 ===============
@@ -229,7 +229,7 @@ Each "-D<key>=<val>" argument above sets the system property named <key> to the
 value denoted by <val>.  The only way to specify inputs to Chord is via system
 properties; there is no command-line argument processing.  All system properties
 recognized by Chord are described at
-http://chord.stanford.edu/user_guide/properties.html.
+http://pag-www.gtisc.gatech.edu/chord/user_guide/properties.html.
 
 QUICK START
 ===========
@@ -258,26 +258,26 @@ line.
 The names and descriptions of analyses besides cipa-0cfa-dlog that are provided
 in Chord are available here:
 
-http://chord.stanford.edu/user_guide/predefined.html
+http://pag-www.gtisc.gatech.edu/chord/user_guide/predefined.html
 
 To setup your own Java program for analysis using Chord, see here:
 
-http://chord.stanford.edu/user_guide/setup.html
+http://pag-www.gtisc.gatech.edu/chord/user_guide/setup.html
 
 To write your own analyses, possibly atop provided ones, see here:
 
-http://chord.stanford.edu/user_guide/writing.html
+http://pag-www.gtisc.gatech.edu/chord/user_guide/writing.html
 
 FURTHER DOCUMENTATION
 =====================
 
 Chord's User Guide is available at:
 
-http://chord.stanford.edu/user_guide/
+http://pag-www.gtisc.gatech.edu/chord/user_guide/
 
 The Javadoc of Chord's source code is available at:
 
-http://chord.stanford.edu/javadoc/
+http://pag-www.gtisc.gatech.edu/chord/javadoc/
 
 For questions about Chord, send email to <chord-discuss@googlegroups.com>, or
 browse previous postings at:
